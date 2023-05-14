@@ -45,6 +45,7 @@ See [Venv's Docs] on various ways of making calls under the virtual-environment.
 [Python]: https://python.org
 [Venv's]: https://docs.python.org/3/tutorial/venv.html
 [Venv's Docs]: https://docs.python.org/3/library/venv.html
+[hyugogirubato]: https://github.com/hyugogirubato/pyImagine
 
 ## Usage
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
 ## Credit
 
 - Imagine Icon &copy; Vyro AI & API
-- Original reverse and version by: [hyugogirubato]: https://github.com/hyugogirubato/pyImagine
+- Original reverse and version by: [hyugogirubato]
 
 ## License
 
