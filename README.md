@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./docs/imagine_logo.gif" width="10%">
+<img src="https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative/blob/main/docs/imagine_logo.gif" width="10%">
 
 **ImaginePy**
 
