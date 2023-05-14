@@ -5,8 +5,8 @@
 **ImaginePy**
 
 <img src="https://img.shields.io/badge/python-3.7+-informational?style=plastic" alt="Python version">
-<img src="https://img.shields.io/github/release-date/hyugogirubato/pyImagine?style=plastic" alt="Release">
-<img src="https://img.shields.io/github/release/hyugogirubato/pyImagine?style=plastic" alt="Version">
+<img src="https://img.shields.io/github/release-date/ItsCEED/ImaginePY-Midjourney-Free-Alternative?style=plastic" alt="Release">
+<img src="https://img.shields.io/github/release/ItsCEED/ImaginePY-Midjourney-Free-Alternative?style=plastic" alt="Version">
 </div>
 
 ## Features
@@ -39,7 +39,7 @@ You can skip steps 3-5 with a simple `python setup.py install` call instead, but
 4. `source env/bin/activate`
 5. `python setup.py install`
 
-As seen in Step 5, running the `pyimagine` executable is somewhat different to a normal PIP installation.
+As seen in Step 5, running the `imaginepy` executable is somewhat different to a normal PIP installation.
 See [Venv's Docs] on various ways of making calls under the virtual-environment.
 
 [Python]: https://python.org
@@ -85,8 +85,8 @@ if __name__ == "__main__":
 
 ## Credit
 
-- Imagine Icon &copy; Vyro AI
-- Original reverse and version by: [hyugogirubato]: <https://github.com/hyugogirubato/pyImagine>
+- Imagine Icon &copy; Vyro AI & API
+- Original reverse and version by: [hyugogirubato]: https://github.com/hyugogirubato/pyImagine
 
 ## License
 
