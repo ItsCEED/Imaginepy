@@ -17,6 +17,7 @@
 - 📦 Stay ahead of the game with the ever-growing art library!
 - 🌇 Generate wallpapers
 - 🔎 Discover and explore similar artistic designs
+- This is refactored and improved version of the original from [hyugogirubato]
 
 ## Installation
 
