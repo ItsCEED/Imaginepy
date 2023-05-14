@@ -21,9 +21,7 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Topic :: Utilities",
-        "Topic :: AI",
-        "Topic :: Generative Art",
+        "Topic :: Utilities"
     ],
     python_requires='>=3.7',
     install_requires=[

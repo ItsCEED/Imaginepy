@@ -5,8 +5,8 @@
 **ImaginePy**
 
 <img src="https://img.shields.io/badge/python-3.7+-informational?style=plastic" alt="Python version">
-<img src="https://img.shields.io/github/release-date/ItsCEED/ImaginePY-Midjourney-Free-Alternative?style=plastic" alt="Release">
-<img src="https://img.shields.io/github/release/ItsCEED/ImaginePY-Midjourney-Free-Alternative?style=plastic" alt="Version">
+<img src="https://img.shields.io/github/release-date/ItsCEED/ImaginePy-Midjourney-Free-Alternative?style=plastic" alt="Release">
+<img src="https://img.shields.io/github/release/ItsCEED/ImaginePy-Midjourney-Free-Alternative?style=plastic" alt="Version">
 </div>
 
 ## Features
@@ -28,13 +28,24 @@ $ python setup.py install
 
 You now have the `imaginepy` package installed.
 
+### PyPi Installation
+
+```
+pip install imaginepy
+```
+
+[Python]: https://python.org
+[Venv's]: https://docs.python.org/3/tutorial/venv.html
+[Venv's Docs]: https://docs.python.org/3/library/venv.html
+[hyugogirubato]: https://github.com/hyugogirubato/pyImagine
+
 ### From Source Code
 
 The following steps are instructions on download, preparing, and running the code under a Venv environment.
 You can skip steps 3-5 with a simple `python setup.py install` call instead, but you miss out on a wide array of benefits.
 
-1. `git clone https://github.com/hyugogirubato/pyImagine`
-2. `cd pyImagine`
+1. `git clone https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative`
+2. `cd ImaginePy-Midjourney-Free-Alternative`
 3. `python -m venv env`
 4. `source env/bin/activate`
 5. `python setup.py install`
@@ -49,11 +60,11 @@ See [Venv's Docs] on various ways of making calls under the virtual-environment.
 
 ## Usage
 
-The following is a minimal example of using pyImagine in a script. It gets the generated image
+The following is a minimal example of using ImaginePy in a script. It gets the generated image
 from the text and increases the quality.
 
 ```python
-from pyimagine import Imagine, Style, Ratio
+from imaginepy import Imagine, Style, Ratio
 
 def main():
     imagine = Imagine()
