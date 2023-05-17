@@ -1,5 +1,6 @@
 from imaginepy import Imagine, Style, Ratio
 
+
 def main():
     imagine = Imagine()
 
@@ -20,10 +21,11 @@ def main():
         return
 
     try:
-        with open("example.jpeg", mode="wb") as img_file:
+        with open("example.png", mode="wb") as img_file:
             img_file.write(img_data)
     except Exception as e:
         print(f"An error occurred while writing the image to file: {e}")
+
 
 if __name__ == "__main__":
     main()

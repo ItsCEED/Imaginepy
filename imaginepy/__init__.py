@@ -240,7 +240,7 @@ class Imagine:
             headers=headers
         ).content
 
-    def sdprem(self, prompt: str, negative: str = None, priority: str = None, high_res_results: str = None, style: Style = Style.IMAGINE_V1, seed: str = None, ratio: Ratio = Ratio.RATIO_1X1, cfg: float = 9.5) -> bytes:
+    def sdprem(self, prompt: str, negative: str = None, priority: str = None, steps: str = None, high_res_results: str = None, style: Style = Style.IMAGINE_V1, seed: str = None, ratio: Ratio = Ratio.RATIO_1X1, cfg: float = 9.5) -> bytes:
         """Generates AI Art."""
         try:
             validated_cfg = validate_cfg(cfg)
@@ -260,9 +260,10 @@ class Imagine:
                     "width": ratio.value[0],
                     "height": ratio.value[1],
                     "seed": seed or "",
+                    "steps": steps or "30",
                     "cfg": validated_cfg,
-                    "priority": priority or "",
-                    "high_res_results": high_res_results or ""
+                    "priority": priority or "0",
+                    "high_res_results": high_res_results or "0"
                 }
             ).content
         except Exception as e:
@@ -360,4 +361,4 @@ class Imagine:
         ).content
 
 
-__version__ = "1.0.5"
+__version__ = "1.0.7"

@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='imaginepy',
-    version='1.0.5',
+    version='1.0.7',
     author='CEED',
     author_email='',
     description='Python library to create Art with AI.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/ItsCEED/ImaginePY-Midjourney-Free-Alternative',
+    url='https://github.com/ItsCEED/imaginepy',
     packages=find_packages(),
     classifiers=[
         "Environment :: Console",
