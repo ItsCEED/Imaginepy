@@ -7,3 +7,4 @@ ImaginePy.egg-info/PKG-INFO
 ImaginePy.egg-info/requires.txt
 ImaginePy.egg-info/SOURCES.txt
 ImaginePy.egg-info/top_level.txt
+*.pyc
