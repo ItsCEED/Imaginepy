@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='imaginepy',
-    version='1.0.7',
+    version='1.1.0',
     author='CEED',
     author_email='',
     description='Python library to create Art with AI.',
