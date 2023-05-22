@@ -48,8 +48,8 @@ pip install imaginepy
 The following steps are instructions on download, preparing, and running the code under a Venv environment.
 You can skip steps 3-5 with a simple `python setup.py install` call instead, but you miss out on a wide array of benefits.
 
-1. `git clone https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative`
-2. `cd ImaginePy-Midjourney-Free-Alternative`
+1. `git clone https://github.com/ItsCEED/Imaginepy`
+2. `cd Imaginepy`
 3. `python -m venv env`
 4. `source env/bin/activate`
 5. `python setup.py install`
