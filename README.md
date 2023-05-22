@@ -4,6 +4,7 @@
 
 **ImaginePy**
 <img src="https://discordapp.com/api/guilds/1110314971012808774/widget.png?style=banner4" alt="Discord Banner 4"/>
+<br>
 <img src="https://img.shields.io/badge/python-3.7+-informational?style=plastic" alt="Python version">
 <img src="https://img.shields.io/github/release-date/ItsCEED/ImaginePy-Midjourney-Free-Alternative?style=plastic" alt="Release">
 <img src="https://img.shields.io/github/release/ItsCEED/ImaginePy-Midjourney-Free-Alternative?style=plastic" alt="Version">
