@@ -3,6 +3,7 @@
 <img src="https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative/blob/main/docs/imagine_logo.gif" width="10%">
 
 **ImaginePy**
+<br>
 <img src="https://discordapp.com/api/guilds/1110314971012808774/widget.png?style=banner4" alt="Discord Banner 4"/>
 <br>
 <img src="https://img.shields.io/badge/python-3.7+-informational?style=plastic" alt="Python version">
