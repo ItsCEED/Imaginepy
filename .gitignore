@@ -10,3 +10,6 @@ ImaginePy.egg-info/top_level.txt
 *.pyc
 *.whl
 *.gz
+build/lib/imaginepy/async_imagine.py
+build/lib/imaginepy/constants.py
+build/lib/imaginepy/sync_imagine.py

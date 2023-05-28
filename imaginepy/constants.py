@@ -53,6 +53,16 @@ class Style(Enum):
                ", polygonal art, layered paper art, paper origami, wonderful compositions, folded geometry, paper craft, made from paper")
     POP_ART = (28, "thumb-23", "styles_v4",
                ", pop art painting, detailed patterns pop art, silkscreen pop art, pop art poster, roy lichtenstein style")
+    # New Styles
+    POP_ART_2 = (28, "thumb-70", "styles_v4",
+                 ", style of shepherd fairey, (Andy Warhol art style), silkscreen pop art, martin ansin artwork, high contrast illustrations, lowbrow pop art style, trending on artstatioin, vector style")
+    PATTERN = (28, "thumb-71", "styles_v4",
+               ", seamless pattern, ((repetitive pattern)), pattern design, background image, wallpaper,  colorful, decorated, flat design")
+    CHROMATIC = (28, "thumb-68", "styles_v4",
+                 ", (((chromatic))) vaporwave nostalgia, vaporwave artwork, ((synthwave)), chromatic colors, , 3d render, vibrant chromatic colors, glowing chromatic colors")
+    CLIP_ART = (28, "thumb-69", "styles_v4",
+                ", (((clip art))), clip art illustration, cartoon character, thin black stroke outline, pastel colors, cute illustration,  vector illustration")
+    # New Styles End
     RENAISSANCE = (28, "thumb-24", "styles_v4", ", renaissance period, neo-classical painting, italian renaissance workshop, pittura metafisica, raphael high renaissance, ancient roman painting, michelangelo painting, Leonardo da Vinci, italian renaissance architecture")
     FANTASY = (28, "thumb-25", "styles_v4", ", fantasy matte painting,  fantasy landscape, ( ( thomas kinkade ) ), whimsical, dreamy, alice in wonderland, daydreaming, epic scene, high exposure, highly detailed, tim white, michael whelan")
     EXTRA_TERRESTRIAL = (28, "thumb-26", "styles_v4",
