@@ -90,6 +90,25 @@ class Style(Enum):
                    ", water elements, fantasy, water, exotic, A majestic composition with water elements, waterfall, lush moss and exotic flowers, highly detailed and realistic, dynamic lighting")
     FIREBENDER = (28, "thumb-39", "styles_v4",
                   ", fire elements, fantasy, fire, lava, striking. A majestic composition with fire elements, fire and ashes surrounding, highly detailed and realistic, cinematic lighting")
+    #EXPERIMENTAL
+    EARTHBENDER = (28, "thumb-41", "styles_v6",
+                  ", earth elements, fantasy, rock, ground, grounding. A robust composition with earth elements, rocks and soil surrounding, highly detailed and realistic, cinematic lighting")
+    AIRBENDER = (28, "thumb-42", "styles_v7",
+                 ", air elements, fantasy, wind, clouds, liberating. A tranquil composition with air elements, wind gusts and floating clouds surrounding, highly detailed and realistic, cinematic lighting")
+    
+    METALBENDER = (28, "thumb-43", "EXPERIMENTAL",
+                  ", metal elements, fantasy, metal, steel, tenacious. A sturdy composition with metal elements, shards and steel surrounding, highly detailed and realistic, cinematic lighting")
+    BLOODBENDER = (28, "thumb-44", "EXPERIMENTAL",
+                  ", blood elements, fantasy, blood, body, unsettling. A dark composition with blood elements, veins and body fluid surrounding, highly detailed and realistic, cinematic lighting")
+    LIGHTNINGBENDER = (28, "thumb-45", "EXPERIMENTAL",
+                  ", lightning elements, fantasy, electricity, thunder, electrifying. A shocking composition with lightning elements, sparks and electricity surrounding, highly detailed and realistic, cinematic lighting")
+    SPIRITBENDER = (28, "thumb-46", "EXPERIMENTAL",
+                 ", spirit elements, fantasy, spirit, ethereal, mystifying. A mystical composition with spirit elements, auras and spiritual energy surrounding, highly detailed and realistic, cinematic lighting")
+    LAVABENDER = (28, "thumb-47", "EXPERIMENTAL",
+                  ", lava elements, fantasy, molten rock, heat, blistering. A fierce composition with lava elements, molten rock and heat waves surrounding, highly detailed and realistic, cinematic lighting")
+    WATERHEALER = (28, "thumb-48", "EXPERIMENTAL",
+                  ", healing elements, fantasy, water, rejuvenation, restorative. A soothing composition with healing elements, glowing water and soothing vibes surrounding, highly detailed and realistic, cinematic lighting")
+    #EXPERIMENTAL END
     KAWAII_CHIBI = (28, "thumb-40", "styles_v4",
                     ", kawaii chibi romance, fantasy, illustration, Colorful idyllic cheerful, Kawaii Chibi inspired")
     FORESTPUNK = (28, "thumb-41", "styles_v4",
