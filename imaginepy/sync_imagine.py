@@ -21,7 +21,7 @@ class Imagine:
         "user-agent": "okhttp/4.10.0"
     }
 
-    def __init__(self, style = None):
+    def __init__(self, style: Style = Style.IMAGINE_V1):
         self.asset = "https://1966211409.rsc.cdn77.org"
         self.api = "https://inferenceengine.vyro.ai"
         if style is not None:
@@ -91,8 +91,7 @@ class Imagine:
                     "prompt": prompt + (style.value[3] or ""),
                     "negative_prompt": negative or "",
                     "style_id": style.value[0],
-                    "width": ratio.value[0],
-                    "height": ratio.value[1],
+                    "aspect_ratio": ratio.value,
                     "seed": seed or "",
                     "steps": steps or "30",
                     "cfg": validated_cfg,
