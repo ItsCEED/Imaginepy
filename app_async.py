@@ -3,7 +3,7 @@ from imaginepy import AsyncImagine, Style, Ratio
 
 
 async def main():
-    imagine = AsyncImagine()
+    imagine = AsyncImagine(Style.ANIME_V2) #initialize with style
 
     img_data = await imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",

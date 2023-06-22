@@ -21,15 +21,17 @@ class Imagine:
         "user-agent": "okhttp/4.10.0"
     }
 
-    def __init__(self):
+    def __init__(self, style = None):
         self.asset = "https://1966211409.rsc.cdn77.org"
         self.api = "https://inferenceengine.vyro.ai"
+        if style is not None:
+            self.HEADERS["style-id"] = str(style.value[0]) # accepts as string
         self.session = Session()
         self.version = "1"
 
     def _request(self, **kwargs) -> Response:
         """Sends a request to the server and returns the response."""
-        headers = Imagine.HEADERS.copy()
+        headers = self.HEADERS
         headers.update(kwargs.get("headers", {}))
 
         response = self.session.request(

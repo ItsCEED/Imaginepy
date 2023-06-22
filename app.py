@@ -2,7 +2,7 @@ from imaginepy import Imagine, Style, Ratio
 
 
 def main():
-    imagine = Imagine()
+    imagine = Imagine(Style.ANIME_V2) #initialize with style
 
     img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
