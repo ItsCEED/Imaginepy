@@ -73,7 +73,7 @@ from the text and increases the quality.
 from imaginepy import Imagine, Style, Ratio
 
 def main():
-    imagine = Imagine()
+    imagine = Imagine(style=Style.ANIME_V2)
 
     img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
@@ -109,7 +109,7 @@ from imaginepy import AsyncImagine, Style, Ratio
 
 
 async def main():
-    imagine = AsyncImagine()
+    imagine = AsyncImagine(style=Style.ANIME_V2)
 
     img_data = await imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
