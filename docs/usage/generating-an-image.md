@@ -4,7 +4,7 @@
 from imaginepy import Imagine, Style, Ratio
 
 def main():
-    imagine = Imagine()
+    imagine = Imagine(style=Style.ANIME_V2)
 
     img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
@@ -34,8 +34,7 @@ if __name__ == "__main__":
 "prompt": #The prompt itself + Style Mods
 "negative_prompt": #Negative Prompt
 "style_id": #The id of the style
-"width": #Width in pixels
-"height": #Height in pixels
+"ratio": #The desired image ratio
 "seed": #A random number that can go up to 999999999
 "cfg": #CFG scale adjusts how much the image will be like your prompt. Higher values keep your image
 closer to your prompt.

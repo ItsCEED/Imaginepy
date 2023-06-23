@@ -44,31 +44,35 @@ class AsyncImagine:
     
     async def assets(self, style: Style = Style.IMAGINE_V1) -> bytes:
         """Gets the assets."""
-        async with self.session.get(
-            url=self.get_style_url(style=style)
-            ) as resp:
-            return await resp.read()
+        try:
+            async with self.session.get(
+                url=self.get_style_url(style=style)
+                ) as resp:
+                return await resp.read()
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while retrieving assets: {e}")
 
     async def variate(self, image: bytes, prompt: str, style: Style = Style.IMAGINE_V1) -> bytes:
-        async with self.session.post(
-                url=f'{self.api}/variate',
-                data={
-                    "model_version": self.version,
-                    "prompt": prompt + (style.value[3] or ""),
-                    "strength": "0",
-                    "style_id": str(style.value[0]),
-                    "image": self.bytes_to_io(image, "image.png")
-                }
-            ) as resp:
-            return await resp.read()
-
+        try:
+            async with self.session.post(
+                    url=f'{self.api}/variate',
+                    data={
+                        "model_version": self.version,
+                        "prompt": prompt + (style.value[3] or ""),
+                        "strength": "0",
+                        "style_id": str(style.value[0]),
+                        "image": self.bytes_to_io(image, "image.png")
+                    }
+                ) as resp:
+                return await resp.read()
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while making variations: {e}")
     async def sdprem(self, prompt: str, negative: str = None, priority: str = None, steps: str = None, high_res_results: str = None, style: Style = Style.IMAGINE_V1, seed: str = None, ratio: Ratio = Ratio.RATIO_1X1, cfg: float = 9.5) -> bytes:
         """Generates AI Art."""
         try:
             validated_cfg = validate_cfg(cfg)
         except Exception as e:
-            print(f"An error occurred while validating cfg: {e}")
-            return None
+            raise ValueError(f"An error occurred while validating cfg: {e}")
 
         try:
             async with self.session.post(
@@ -88,9 +92,7 @@ class AsyncImagine:
                 ) as resp:
                 return await resp.read()
         except Exception as e:
-            print(f"An error occurred while making the request: {e}")
-            return None
-
+            raise ConnectionError(f"An error occurred while making the request: {e}")
 
     async def upscale(self, image: bytes) -> bytes:
         """Upscales the image."""
@@ -104,67 +106,75 @@ class AsyncImagine:
                 ) as resp:
                 return await resp.read()
         except Exception as e:
-            print(f"An error occurred while making the request: {e}")
-            return None
+            raise ConnectionError(f"An error occurred while making upscale request: {e}")
 
 
     async def translate(self, prompt: str) -> str:
         """Translates the prompt."""
-        async with self.session.post(
-                url=f"{self.api}/translate",
-                data={
-                    "q": prompt,
-                    "source": detect(prompt),
-                    "target": "en"
-                }
-            ) as resp:
-            return (await resp.json())["translatedText"]
-
+        try:
+            async with self.session.post(
+                    url=f"{self.api}/translate",
+                    data={
+                        "q": prompt,
+                        "source": detect(prompt),
+                        "target": "en"
+                    }
+                ) as resp:
+                return (await resp.json())["translatedText"]
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while translating the prompt: {e}")
 
     async def interrogator(self, image: bytes) -> str:
         """Generates a prompt."""
-        async with self.session.post(
-                url=f"{self.api}/interrogator",
-                data={
-                    "model_version": str(self.version),
-                    "image": self.bytes_to_io(image,"prompt_generator_temp.png")
-                }
-            ) as resp:
-            return await resp.text()
-
+        try:
+            async with self.session.post(
+                    url=f"{self.api}/interrogator",
+                    data={
+                        "model_version": str(self.version),
+                        "image": self.bytes_to_io(image,"prompt_generator_temp.png")
+                    }
+                ) as resp:
+                return await resp.text()
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while generating a prompt: {e}")
 
     async def sdimg(self, image: bytes, prompt: str, negative: str = None, seed: str = None, cfg: float = 9.5) -> bytes:
         """Performs inpainting."""
-        async with self.session.post(
-                url=f"{self.api}/sdimg",
-                data={
-                    "model_version": self.version,
-                    "prompt": prompt,
-                    "negative_prompt": negative or "",
-                    "seed": seed or "",
-                    "cfg": validate_cfg(cfg),
-                    "image": self.bytes_to_io(image, "image.png")
-                }
-            ) as resp:
-            return await resp.read()
+        try:
+            async with self.session.post(
+                    url=f"{self.api}/sdimg",
+                    data={
+                        "model_version": self.version,
+                        "prompt": prompt,
+                        "negative_prompt": negative or "",
+                        "seed": seed or "",
+                        "cfg": validate_cfg(cfg),
+                        "image": self.bytes_to_io(image, "image.png")
+                    }
+                ) as resp:
+                return await resp.read()
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while performing an inpainting: {e}")
 
 
     async def controlnet(self, image: bytes, prompt: str, negative: str = None, cfg: float = 9.5, control: Control = Control.SCRIBBLE, style: Style = Style.IMAGINE_V1, seed: str = None) -> bytes:
         """Performs image remix."""
-        async with self.session.post(
-                url=f"{self.api}/controlnet",
-                data={
-                    "model_version": self.version,
-                    "prompt": prompt + (style.value[3] or ""),
-                    "negative_prompt": negative or "",
-                    "strength": "0",
-                    "cfg": validate_cfg(cfg),
-                    "control": control.value,
-                    "style_id": str(style.value[0]),
-                    "seed": seed or "",
-                    "image": self.bytes_to_io(image, "image.png")
-                }
-            ) as resp:
-            return await resp.read()
-
+        try:
+            async with self.session.post(
+                    url=f"{self.api}/controlnet",
+                    data={
+                        "model_version": self.version,
+                        "prompt": prompt + (style.value[3] or ""),
+                        "negative_prompt": negative or "",
+                        "strength": "0",
+                        "cfg": validate_cfg(cfg),
+                        "control": control.value,
+                        "style_id": str(style.value[0]),
+                        "seed": seed or "",
+                        "image": self.bytes_to_io(image, "image.png")
+                    }
+                ) as resp:
+                return await resp.read()
+        except Exception as e:
+            raise ConnectionError(f"An error occurred while image remixing: {e}")
 

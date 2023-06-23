@@ -79,8 +79,7 @@ class Imagine:
         try:
             validated_cfg = validate_cfg(cfg)
         except Exception as e:
-            print(f"An error occurred while validating cfg: {e}")
-            return None
+            raise ValueError(f"An error occurred while validating cfg: {e}")
 
         try:
             return self._request(
@@ -100,8 +99,7 @@ class Imagine:
                 }
             ).content
         except Exception as e:
-            print(f"An error occurred while making the request: {e}")
-            return None
+            raise ConnectionError(f"An error occurred while making the request: {e}")
 
     def upscale(self, image: bytes) -> bytes:
         """Upscales the image."""
@@ -111,8 +109,7 @@ class Imagine:
                 "image": ("test.png", image, "image/png")
             })
         except Exception as e:
-            print(f"An error occurred while building the multipart data: {e}")
-            return None
+            raise ConnectionError(f"An error occurred while building the multipart data: {e}")
 
         try:
             return self._request(
@@ -122,8 +119,7 @@ class Imagine:
                 headers=headers
             ).content
         except Exception as e:
-            print(f"An error occurred while making the request: {e}")
-            return None
+            raise ConnectionError(f"An error occurred while making the request: {e}")
 
     def translate(self, prompt: str) -> str:
         """Translates the prompt."""
