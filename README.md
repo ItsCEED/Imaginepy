@@ -1,5 +1,6 @@
 <div align="center">
-## PyPi IS NOT UPDATE! PLEASE INSTALL FROM THE REPO!
+<b>>PyPi IS NOT UPDATE! PLEASE INSTALL FROM THE REPO!</b>
+<br>
   
 <img src="https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative/blob/main/docs/imagine_logo.gif" width="10%">
 
