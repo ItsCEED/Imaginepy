@@ -38,6 +38,8 @@ setup(
         'aiohttp',
         'requests_toolbelt',
         'langdetect',
-        'pybase64'
+        'pybase64',
+        'httpx',
+        'pillow'
     ],
 )
