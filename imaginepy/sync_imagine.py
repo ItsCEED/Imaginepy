@@ -1,191 +1,298 @@
-from typing import Any, Optional, Tuple
-from requests import Session, Response
-from requests_toolbelt.multipart.encoder import MultipartEncoder
+import hashlib
+import re
+from enum import Enum
+from typing import Union
+
+import httpx
 from langdetect import detect
+from httpx import Response
+from requests_toolbelt import MultipartEncoder
 
 from .constants import *
+from .exceptions import *
+from .utils import *
+import pybase64
 
 
-def validate_cfg(cfg: float) -> str:
-    """Validates the cfg parameter."""
-    if cfg < 0.0 or cfg > 16.0:
-        raise ValueError(f"Invalid CFG, must be in range (0; 16), {cfg}")
-    return str(cfg)
+class DeviantArt(Enum):
+    ID = 23185
+    SECRET = "fae0145a0736611056a5196a122c0d36"
 
 
 class Imagine:
-    """Class for handling API requests to the Imagine service."""
 
-    HEADERS = {
-        "accept": "*/*",
-        "user-agent": "okhttp/4.10.0"
-    }
-
-    def __init__(self, style: Style = Style.IMAGINE_V1):
-        self.asset = "https://1966211409.rsc.cdn77.org"
+    def __init__(self, restricted: bool = True):
+        self.restricted = restricted
         self.api = "https://inferenceengine.vyro.ai"
-        if style is not None:
-            self.HEADERS["style-id"] = str(style.value[0]) # accepts as string
-        self.session = Session()
-        self.version = "1"
+        self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
+        self.version = 1
 
     def _request(self, **kwargs) -> Response:
-        """Sends a request to the server and returns the response."""
-        headers = self.HEADERS
-        headers.update(kwargs.get("headers", {}))
+        headers = {"accept": "*/*", "user-agent": "okhttp/4.10.0"}
+        headers.update(kwargs.get("headers") or {})
 
-        response = self.session.request(
-            method=kwargs.get("method", "GET").upper(),
-            url=kwargs.get("url"),
-            params=kwargs.get("params"),
-            data=kwargs.get("data"),
-            headers=headers
-        )
+        data = clear_dict(kwargs.get("data"))
+        if data:
+            prompt = data.get("prompt", "").lower().split(" ")
+            if prompt:
+                for i, word in enumerate(prompt):
+                    word = re.sub(r'[^a-zA-Z]', "", word)
+                    if word in BANNED_WORDS:
+                        if self.restricted:
+                            raise InvalidWord(f"Banned word found: {word}")
+                        else:
+                            prompt[i] = prompt[i].replace(word, get_word(word))
 
-        response.raise_for_status()
-        return response
+                data["prompt"] = " ".join(prompt)
 
-    def _build_multipart_data(self, fields: dict) -> Tuple[MultipartEncoder, dict]:
-        """Helper function to build multipart form data."""
-        multi = MultipartEncoder(fields=fields)
-        headers = {"content-type": multi.content_type}
-        return multi, headers
+            # any to str
+            data = {key: str(value) if type(value) !=
+                    tuple else value for key, value in data.items()}
 
-    def assets(self, style: Style = Style.IMAGINE_V1) -> bytes:
-        """Gets the assets."""
-        return self._request(
-            url=f"{self.asset}/appStuff/imagine-fncisndcubnsduigfuds//assets/{style.value[2]}/{style.value[1]}.webp"
-        ).content
-
-    def variate(self, image: bytes, prompt: str, style: Style = Style.IMAGINE_V1) -> bytes:
-        """Variates the character."""
-        multi, headers = self._build_multipart_data({
-            "model_version": self.version,
-            "prompt": prompt + (style.value[3] or ""),
-            "strength": "0",
-            "style_id": str(style.value[0]),
-            "image": ("image.png", image, "image/png")
-        })
-
-        return self._request(
-            method="POST",
-            url=f"{self.api}/variate",
-            data=multi,
-            headers=headers
-        ).content
-
-    def sdprem(self, prompt: str, negative: str = None, priority: str = None, steps: str = None, high_res_results: str = None, style: Style = Style.IMAGINE_V1, seed: str = None, ratio: Ratio = Ratio.RATIO_1X1, cfg: float = 9.5) -> bytes:
-        """Generates AI Art."""
-        try:
-            validated_cfg = validate_cfg(cfg)
-        except Exception as e:
-            raise ValueError(f"An error occurred while validating cfg: {e}")
+            multi = MultipartEncoder(fields=data)
+            headers["content-type"] = multi.content_type
+            data = multi.read()
 
         try:
-            return self._request(
+            with httpx.Client() as client:
+                r = client.request(
+                    method=kwargs.get("method", "GET"),
+                    url=kwargs.get("url"),
+                    data=data,
+                    headers=headers,
+                    timeout=60
+                )
+                r.raise_for_status()
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
+
+        signature = hashlib.md5(r.content).hexdigest()
+        if signature == "d8b21a024d6267f3014d874d8372f7c8":
+            raise BannedContent("Violation of community guidelines.")
+        return r
+
+    def thumb(self, item: Union[Model, Style, Inspiration, Mode]) -> bytes:
+        href = item.value[2 if isinstance(
+            item, Model) or isinstance(item, Style) else 1]
+        with httpx.Client() as client:
+            response = client.get(f"{self.cdn}/{href}")
+            response.raise_for_status()
+            return bytes2png(response.content)
+
+    def sdinsp(self, inspiration: Inspiration = Inspiration.INSPIRATION_01) -> bytes:
+        """Inspiration"""
+        return self.sdprem(
+            prompt=inspiration.value[0],
+            model=next(
+                (item for item in Model if item.value[0] == inspiration.value[2]), Model.V3),
+            seed=inspiration.value[3])
+
+    def variate(
+            self,
+            content: bytes,
+            prompt: str,
+            model: Model = Model.V3,
+            strength: int = 0,
+            style: Style = None,
+            asbase64: bool = False
+    ) -> bytes:
+        """Character"""
+        try:
+            response = self._request(
                 method="POST",
-                url=f"{self.api}/sdprem",
+                url=f"{self.api}/variate",
                 data={
                     "model_version": self.version,
-                    "prompt": prompt + (style.value[3] or ""),
-                    "negative_prompt": negative or "",
-                    "style_id": style.value[0],
-                    "aspect_ratio": ratio.value,
-                    "seed": seed or "",
-                    "steps": steps or "30",
-                    "cfg": validated_cfg,
-                    "priority": priority or "0",
-                    "high_res_results": high_res_results or "0"
+                    "prompt": prompt + (style.value[3] if style else ""),
+                    "strength": strength,
+                    "style_id": style.value[0] if style else model.value[0],
+                    "image": ("image.jpeg", content, "image/jpg")
                 }
-            ).content
-        except Exception as e:
-            raise ConnectionError(f"An error occurred while making the request: {e}")
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
-    def upscale(self, image: bytes) -> bytes:
-        """Upscales the image."""
+    def sdprem(
+            self,
+            prompt: str,
+            negative: str = None,
+            model: Model = Model.V3,
+            style: Style = None,
+            seed: int = None,
+            ratio: Ratio = Ratio.RATIO_1X1,
+            cfg: float = 9.5,
+            priority: bool = True,
+            high_result: bool = True,
+            steps: int = 26,
+            asbase64: bool = False
+    ) -> bytes:
+        """AI Art"""
         try:
-            multi, headers = self._build_multipart_data({
-                "model_version": self.version,
-                "image": ("test.png", image, "image/png")
-            })
-        except Exception as e:
-            raise ConnectionError(f"An error occurred while building the multipart data: {e}")
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/sdprem",  # /sdprem (premium), /sd (free)
+                data={
+                    "model_version": self.version,
+                    "prompt": prompt + (style.value[3] if style else ""),
+                    "style_id": style.value[0] if style else model.value[0],
+                    "aspect_ratio": ratio.value,
+                    "seed": seed,
+                    "cfg": get_cfg(cfg),
+                    "negative_prompt": negative,
+                    "priority": int(priority),
+                    "high_res_results": int(high_result),
+                    "steps": get_steps(steps)
+                }
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
+    def upscale(self, content: bytes, asbase64: bool = False) -> bytes:
+        """Upscale"""
         try:
-            return self._request(
+            response = self._request(
                 method="POST",
                 url=f"{self.api}/upscale",
-                data=multi,
-                headers=headers
-            ).content
-        except Exception as e:
-            raise ConnectionError(f"An error occurred while making the request: {e}")
+                data={
+                    "model_version": self.version,
+                    "image": ("_", content, "image/jpg")
+                }
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
     def translate(self, prompt: str) -> str:
-        """Translates the prompt."""
-        multi, headers = self._build_multipart_data({
-            "q": prompt,
-            "source": detect(prompt),
-            "target": "en"
-        })
+        """Translate Prompt"""
+        try:
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/translate",
+                data={
+                    "q": prompt,
+                    "source": detect(prompt),
+                    "target": "en"
+                }
+            )
+            response_json = response.json()
+            return response_json["translatedText"]
+        except (httpx.RequestError, KeyError) as e:
+            raise Exception(f"Request failed: {e}")
 
-        return self._request(
-            method="POST",
-            url=f"{self.api}/translate",
-            data=multi,
-            headers=headers
-        ).json()["translatedText"]
+    def interrogator(self, content: bytes) -> str:
+        """Generate Prompt"""
+        try:
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/interrogator",
+                data={
+                    "model_version": self.version,
+                    "image": ("prompt_generator_temp.jpeg", content, "image/jpg")
+                }
+            )
+            return response.text
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
-    def interrogator(self, image: bytes) -> str:
-        """Generates a prompt."""
-        multi, headers = self._build_multipart_data({
-            "model_version": str(self.version),
-            "image": ("prompt_generator_temp.png", image, "application/zip")
-        })
+    def sdimg(
+            self,
+            content: bytes,
+            mask: bytes,
+            prompt: str,
+            negative: str = None,
+            seed: int = None,
+            cfg: float = 9.5,
+            priority: bool = True,
+            asbase64: bool = False
+    ) -> bytes:
+        """Inpainting"""
+        if not same_size(content, mask):
+            raise InvalidSize("Mask size must be same as image size.")
 
-        return self._request(
-            method="POST",
-            url=f"{self.api}/interrogator",
-            data=multi,
-            headers=headers
-        ).text
+        try:
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/sdimg",
+                data={
+                    "model_version": self.version,
+                    "prompt": prompt,
+                    "negative_prompt": negative,
+                    "seed": seed,
+                    "cfg": get_cfg(cfg),
+                    "image": ("temp_646.912234613557.jpg", content, "image/jpg"),
+                    "mask": ("temp_646.912234613557.jpg", mask, "image/jpg"),
+                    "priority": int(priority)
+                }
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
-    def sdimg(self, image: bytes, prompt: str, negative: str = None, seed: str = None, cfg: float = 9.5) -> bytes:
-        """Performs inpainting."""
-        multi, headers = self._build_multipart_data({
-            "model_version": self.version,
-            "prompt": prompt,
-            "negative_prompt": negative or "",
-            "seed": seed or "",
-            "cfg": validate_cfg(cfg),
-            "image": ("image.png", image, "image/png")
-        })
+    def controlnet(
+            self,
+            content: bytes,
+            prompt: str,
+            model: Model = Model.V3,
+            negative: str = None,
+            strength: int = 0,
+            cfg: float = 9.5,
+            mode: Mode = Mode.SCRIBBLE,
+            style: Style = None,
+            seed: str = None,
+            asbase64: bool = False
+    ) -> bytes:
+        """Image Remix"""
+        try:
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/controlnet",
+                data={
+                    "model_version": self.version,
+                    "prompt": prompt + (style.value[3] if style else ""),
+                    "negative_prompt": negative,
+                    "strength": strength,
+                    "cfg": get_cfg(cfg),
+                    "control": mode.value[0],
+                    "style_id": style.value[0] if style else model.value[0],
+                    "seed": seed,
+                    "image": ("temp_314.1353898439128.jpg", content, "image/jpg")
+                }
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")
 
-        return self._request(
-            method="POST",
-            url=f"{self.api}/sdimg",
-            data=multi,
-            headers=headers
-        ).content
-
-    def controlnet(self, image: bytes, prompt: str, negative: str = None, cfg: float = 9.5, control: Control = Control.SCRIBBLE, style: Style = Style.IMAGINE_V1, seed: str = None) -> bytes:
-        """Performs image remix."""
-        multi, headers = self._build_multipart_data({
-            "model_version": self.version,
-            "prompt": prompt + (style.value[3] or ""),
-            "negative_prompt": negative or "",
-            "strength": "0",
-            "cfg": validate_cfg(cfg),
-            "control": control.value,
-            "style_id": str(style.value[0]),
-            "seed": seed or "",
-            "image": ("image.png", image, "image/png")
-        })
-
-        return self._request(
-            method="POST",
-            url=f"{self.api}/controlnet",
-            data=multi,
-            headers=headers
-        ).content
-
+    def codeformer(self, content: bytes, asbase64: bool = False) -> bytes:
+        """Face Fixed"""
+        try:
+            response = self._request(
+                method="POST",
+                url=f"{self.api}/codeformer",
+                data={
+                    "model_version": self.version,
+                    "image": ("tempImage.jpg", content, "image/jpg")
+                }
+            )
+            if asbase64 == True:
+                return pybase64.b64encode(response.content).decode('utf-8')
+            else:
+                return bytes2png(response.content)
+        except httpx.RequestError as e:
+            raise Exception(f"Request failed: {e}")

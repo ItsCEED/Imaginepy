@@ -1,14 +1,19 @@
 import asyncio
-from imaginepy import AsyncImagine, Style, Ratio
+from imaginepy import AsyncImagine
+from imaginepy.constants import *
 
 
 async def main():
-    imagine = AsyncImagine(style=Style.ANIME_V2) #initialize with style
-
-    img_data = await imagine.sdprem(
+    imagine = AsyncImagine()
+    img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
-        style=Style.ANIME_V2,
-        ratio=Ratio.RATIO_16X9
+        style=Style.NO_STYLE,
+        ratio=Ratio.RATIO_16X9,
+        negative="",
+        seed=1000,
+        cfg=16,
+        model=Model.REALISTIC,
+        asbase64=False  # default is false, putting it here as presentation.
     )
 
     if img_data is None:
@@ -26,9 +31,8 @@ async def main():
             img_file.write(img_data)
     except Exception as e:
         print(f"An error occurred while writing the image to file: {e}")
-        
+
     await imagine.close()
-    
 
 
 if __name__ == "__main__":
