@@ -1,5 +1,4 @@
-from imaginepy import Imagine
-from imaginepy.constants import *
+from imaginepy import Imagine, Style, Ratio, Model, constants
 
 
 def main():
