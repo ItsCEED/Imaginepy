@@ -101,13 +101,15 @@ def generate_image():
         ratio_enum = next((r for r in Ratio if r.name == ratio_str), Ratio.RATIO_16X9)
         model_enum = next((m for m in Model if m.name == model_str), Model.REALISTIC)
 
+        cfg_value = int(cfg_scale.get())
+
         img_data = imagine.sdprem(
             prompt=prompt,
             style=style_enum,
             ratio=ratio_enum,
             negative="",
             seed=1000,
-            cfg=16,
+            cfg=cfg_value,
             model=model_enum,
             asbase64=False
         )
@@ -136,25 +138,26 @@ def generate_image():
 
     threading.Thread(target=generate).start()
 
-root = ThemedTk(theme="elegance")
+root = ThemedTk(theme="ubuntu")
 root.title("Image Generator")
 
 # Calculate position of main window to center on screen
-window_width = 800
-window_height = 700
+window_width = 1080
+window_height = 750
 position_top = int(root.winfo_screenheight() / 2 - window_height / 2)
 position_right = int(root.winfo_screenwidth() / 2 - window_width / 2)
 
 root.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
 
+
 frame = ttk.Frame(root)
-frame.place(x=0, y=0, width=800, height=650)
+frame.place(x=0, y=0, width=1080, height=750)
 
 prompt_lbl = ttk.Label(frame, text="Input:", font=("Arial", 12))  # Increase font size to 14
-prompt_lbl.place(x=20, y=15)
+prompt_lbl.place(x=10, y=15)
 
-entry = ttk.Entry(frame, width=50, font=("Arial", 16))  # Increase font size to 12
-entry.place(x=100, y=10)
+entry = ttk.Entry(frame, width=70, font=("Arial", 16))  # Increase font size to 12
+entry.place(x=70, y=10)
 
 model_lbl = ttk.Label(frame, text="Model:", font=("Arial", 12))  # Increase font size to 14
 model_lbl.place(x=10, y=65)
@@ -164,28 +167,36 @@ model_cbox.set("IMAGINE_V3")  # Set default model
 model_cbox.place(x=70, y=60)
 
 style_lbl = ttk.Label(frame, text="Style:", font=("Arial", 12))  # Increase font size to 14
-style_lbl.place(x=300, y=65)
+style_lbl.place(x=10, y=115)
 
 style_cbox = ttk.Combobox(frame, values=styles, state='readonly', font=("Arial", 12))  # Increase font size to 12
-style_cbox.set("PAINTING")  # Set default style
-style_cbox.place(x=350, y=60)
+style_cbox.set("ANIME_V2")  # Set default style
+style_cbox.place(x=70, y=120)
 
-#ratio_lbl = ttk.Label(frame, text="Ratio:", font=("Arial", 12))  # Increase font size to 14
-#ratio_lbl.place(x=550, y=50)
+ratio_lbl = ttk.Label(frame, text="Ratio:", font=("Arial", 12))  # Increase font size to 14
+ratio_lbl.place(x=10, y=185)
 
 ratio_cbox = ttk.Combobox(frame, values=ratios, state='readonly', font=("Arial", 12))  # Increase font size to 12
 ratio_cbox.set("RATIO_16X9")  # Set default ratio
-ratio_cbox.place(x=580, y=60)
+ratio_cbox.place(x=70, y=180)
+
+# Add this before the "Generate" button
+cfg_lbl = ttk.Label(frame, text="<-- higher Quality | Better Prompt --->", font=("Arial", 12))  # Increase font size to 14
+cfg_lbl.place(x=30, y=250)
+
+cfg_scale = ttk.Scale(frame, from_=3, to=15, orient=HORIZONTAL, length=200)  # Adjust the length parameter
+cfg_scale.set(3)  # Set default value
+cfg_scale.place(x=70, y=290)
 
 btn_style = ttk.Style()
-btn_style.configure("Custom.TButton", font=("Arial", 16))  # Set the font for the custom style
+btn_style.configure("Custom.TButton", font=("Arial", 18))  # Set the font for the custom style
 btn = ttk.Button(frame, text="Generate", command=generate_image, width=12, style="Custom.TButton")  # Use the custom style
-btn.place(x=80, y=110)
+btn.place(x=80, y=340)
 
 browse_btn = ttk.Button(frame, text="Browse", command=browse_images, width=12, style="Custom.TButton")  # Increase font size to 14
-browse_btn.place(x=250, y=110)
+browse_btn.place(x=80, y=400)
 
 lbl = ttk.Label(frame)
-lbl.place(x=50, y=190)
+lbl.place(x=320, y=120)
 
 root.mainloop()
