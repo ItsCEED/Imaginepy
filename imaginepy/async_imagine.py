@@ -26,6 +26,10 @@ class AsyncImagine:
         self.api = "https://inferenceengine.vyro.ai"
         self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
         self.version = 1
+        self.client = httpx.AsyncClient()
+
+    async def close(self):
+        await self.client.aclose()
 
     async def _request(self, **kwargs) -> Response:
         headers = {"accept": "*/*", "user-agent": "okhttp/4.10.0"}
