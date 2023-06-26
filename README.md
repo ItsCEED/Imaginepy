@@ -1,7 +1,4 @@
 <div align="center">
-<b>>PyPi IS NOT UPDATE! PLEASE INSTALL FROM THE REPO!</b>
-<br>
-  
 <img src="https://github.com/ItsCEED/ImaginePy-Midjourney-Free-Alternative/blob/main/docs/imagine_logo.gif" width="10%">
 
 **ImaginePy**
@@ -72,22 +69,29 @@ The following is a minimal example of using ImaginePy in a script. It gets the g
 from the text and increases the quality.
 
 ```python
-from imaginepy import Imagine, Style, Ratio
+from imaginepy import Imagine
+from imaginepy.constants import *
+
 
 def main():
-    imagine = Imagine(style=Style.ANIME_V2)
+    imagine = Imagine()
 
     img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
-        style=Style.ANIME_V2,
-        ratio=Ratio.RATIO_16X9
+        style=Style.NO_STYLE,
+        ratio=Ratio.RATIO_16X9,
+        negative="",
+        seed=1000,
+        cfg=16,
+        model=Model.REALISTIC,
+        asbase64=False  # default is false, putting it here as presentation.
     )
 
     if img_data is None:
         print("An error occurred while generating the image.")
         return
 
-    img_data = imagine.upscale(image=img_data)
+    img_data = imagine.upscale(img_data)
 
     if img_data is None:
         print("An error occurred while upscaling the image.")
@@ -99,6 +103,7 @@ def main():
     except Exception as e:
         print(f"An error occurred while writing the image to file: {e}")
 
+
 if __name__ == "__main__":
     main()
 ```
@@ -107,16 +112,21 @@ Async version
 
 ```python
 import asyncio
-from imaginepy import AsyncImagine, Style, Ratio
+from imaginepy import AsyncImagine
+from imaginepy.constants import *
 
 
 async def main():
-    imagine = AsyncImagine(style=Style.ANIME_V2)
-
-    img_data = await imagine.sdprem(
+    imagine = AsyncImagine()
+    img_data = imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
-        style=Style.ANIME_V2,
-        ratio=Ratio.RATIO_16X9
+        style=Style.NO_STYLE,
+        ratio=Ratio.RATIO_16X9,
+        negative="",
+        seed=1000,
+        cfg=16,
+        model=Model.REALISTIC,
+        asbase64=False  # default is false, putting it here as presentation.
     )
 
     if img_data is None:
@@ -129,16 +139,18 @@ async def main():
         print("An error occurred while upscaling the image.")
         return
 
-    await imagine.close()
     try:
         with open("example.png", mode="wb") as img_file:
             img_file.write(img_data)
     except Exception as e:
         print(f"An error occurred while writing the image to file: {e}")
 
+    await imagine.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 ```
 
 ## Credit
