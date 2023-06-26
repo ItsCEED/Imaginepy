@@ -1,8 +1,6 @@
 import subprocess
 import sys
 import os
-import aiohttp
-import asyncio
 
 def install(packages):
     subprocess.check_call([sys.executable, "-m", "pip", "install", *packages])
