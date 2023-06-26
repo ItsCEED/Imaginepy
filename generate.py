@@ -184,7 +184,7 @@ style_lbl = ttk.Label(frame, text="Style:", font=("Arial", 12))  # Increase font
 style_lbl.place(x=10, y=125)
 
 style_cbox = ttk.Combobox(frame, values=styles, state='readonly', font=("Arial", 12))  # Increase font size to 12
-style_cbox.set("ANIME_V2")  # Set default style
+style_cbox.set("ABSTRACT_VIBRANT")  # Set default style
 style_cbox.place(x=70, y=120)
 
 ratio_lbl = ttk.Label(frame, text="Ratio:", font=("Arial", 12))  # Increase font size to 14
