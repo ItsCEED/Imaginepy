@@ -4,7 +4,7 @@ from imaginepy import AsyncImagine, Style, Ratio, Model, constants
 
 async def main():
     imagine = AsyncImagine()
-    img_data = imagine.sdprem(
+    img_data = await imagine.sdprem(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
         style=Style.NO_STYLE,
         ratio=Ratio.RATIO_16X9,
@@ -19,7 +19,7 @@ async def main():
         print("An error occurred while generating the image.")
         return
 
-    img_data = await imagine.upscale(image=img_data)
+    img_data = await imagine.upscale(content=img_data)
 
     if img_data is None:
         print("An error occurred while upscaling the image.")
@@ -30,8 +30,6 @@ async def main():
             img_file.write(img_data)
     except Exception as e:
         print(f"An error occurred while writing the image to file: {e}")
-
-    await imagine.close()
 
 
 if __name__ == "__main__":
