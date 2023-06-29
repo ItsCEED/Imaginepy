@@ -1,7 +1,7 @@
 from enum import Enum
 
-# Banned
-BANNED_WORDS = ['xxx']
+# Hardcoded banned  words by api
+BANNED_WORDS = ['cock', 'dick', 'cumshot', 'fuck', 'sperm', 'naked', 'ass', 'tits', 'fingering', 'masturbate', 'bitch', 'blowjob', 'prostitute', 'dickhead', 'pussy', 'asshole', 'boobs', 'boob', 'breast', 'dildo', 'erection', 'dick', 'licking', 'nude', 'penis', 'porn', 'vagina', 'threesome', 'orgy', 'bdsm', 'condom', 'sexting', 'squirt', 'testicles', 'anal', 'bukkake', 'creampie', 'stripper', 'strap-on', 'missionary', 'clitoris', 'cock ring', 'doggy style', 'sex', 'lingerie', 'milf', 'oral', 'sucking', 'straddle', 'bondage', 'orgasm', 'slut', 'cumming', 'ode', "men's milk", 'jerk', 'cunt', 'anal', 'anus', 'adult film', 'adult movie', 'adult video', 'anal', 'ass', 'bdsm', 'bestiality', 'bisexual', 'bitch', 'boobies', 'boobys', 'bound & gagged', 'bound and gagged', 'breast', 'breasts', 'butt', 'cock', 'condom', 'cuck-old', 'cuckold', 'cum', 'cum-shot', 'cunt', 'deep throat', 'dick', 'erotic', 'escort', 'fuck', 'fucking', 'fucked', 'fucks', 'hentai', 'hustler', 'jerking off', 'kinky', 'lesbian', 'naked', 'nude', 'orgasm', 'nudity', 'penis', 'porn', 'pornagraphy', 'pussy', 'rape', 'semen', 'sex', 'sexual', 'sexy', 'slut', 'threesome', 'tube8', 'twink', 'upskirt', 'vagina', 'virgin', 'whore', 'xxx', 'nudity', 'milfs', 'porn', 'bare']
 
 
 # KEY = (parameter, images, thumbnail)
