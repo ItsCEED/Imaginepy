@@ -21,10 +21,10 @@ class DeviantArt(Enum):
 
 class Imagine:
 
-    def __init__(self, restricted: bool = True, api: str = og_ENDPOINT, proxy: dict = None):
+    def __init__(self, restricted: bool = True, api: str = og_ENDPOINT, proxies: dict = None):
         self.restricted = restricted
         self.api = api
-        self.proxy = proxy
+        self.proxy = proxies
         self.cdn = og_CDN
         self.version = 1
 
