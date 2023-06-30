@@ -21,9 +21,10 @@ class DeviantArt(Enum):
 
 class Imagine:
 
-    def __init__(self, restricted: bool = True):
+    def __init__(self, restricted: bool = True, api: str = "https://inferenceengine.vyro.ai", proxy: dict = None):
         self.restricted = restricted
-        self.api = "https://inferenceengine.vyro.ai"
+        self.api = api
+        self.proxy = proxy
         self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
         self.version = 1
 
@@ -54,7 +55,7 @@ class Imagine:
             data = multi.read()
 
         try:
-            with httpx.Client() as client:
+            with httpx.Client(proxies=self.proxy) as client:
                 r = client.request(
                     method=kwargs.get("method", "GET"),
                     url=kwargs.get("url"),
@@ -74,7 +75,7 @@ class Imagine:
     def thumb(self, item: Union[Model, Style, Inspiration, Mode]) -> bytes:
         href = item.value[2 if isinstance(
             item, Model) or isinstance(item, Style) else 1]
-        with httpx.Client() as client:
+        with httpx.Client(proxies=self.proxy) as client:
             response = client.get(f"{self.cdn}/{href}")
             response.raise_for_status()
             return bytes2png(response.content)
