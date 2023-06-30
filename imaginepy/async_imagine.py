@@ -21,12 +21,13 @@ class DeviantArt(Enum):
 
 class AsyncImagine:
 
-    def __init__(self, restricted: bool = True):
+    def __init__(self, restricted: bool = True, api: str = "https://inferenceengine.vyro.ai", proxy: dict = None):
         self.restricted = restricted
-        self.api = "https://inferenceengine.vyro.ai"
+        self.api = api
+        self.proxy = proxy
         self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
         self.version = 1
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(proxies=self.proxy)
 
     async def close(self):
         await self.client.aclose()
@@ -58,7 +59,7 @@ class AsyncImagine:
             data = multi.read()
 
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(proxies=self.proxy) as client:
                 r = await client.request(
                     method=kwargs.get("method", "GET"),
                     url=kwargs.get("url"),
@@ -78,7 +79,7 @@ class AsyncImagine:
     async def thumb(self, item: Union[Model, Style, Inspiration, Mode]) -> bytes:
         href = item.value[2 if isinstance(
             item, Model) or isinstance(item, Style) else 1]
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(proxies=self.proxy) as client:
             response = await client.get(f"{self.cdn}/{href}")
             response.raise_for_status()
             return bytes2png(response.content)
