@@ -2,6 +2,20 @@ from enum import Enum
 
 # Banned
 BANNED_WORDS = ['xxx']
+BANNED_SIGNATURE = "d8b21a024d6267f3014d874d8372f7c8"
+
+# The official API urls, here to avoid repeating it twice
+og_ENDPOINT = "https://inferenceengine.vyro.ai"
+og_CDN = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
+
+# DevianArt credentials
+da_ID = 23185
+da_SECRET = "fae0145a0736611056a5196a122c0d36"
+
+# sdimg have some repetitive image names, so here is better to simplify it a little
+sd_temp_name = "temp_646.912234613557.jpg"
+# Same for remix / controlnet function
+remix_temp_name = "temp_314.1353898439128.jpg"
 
 
 # KEY = (parameter, images, thumbnail)

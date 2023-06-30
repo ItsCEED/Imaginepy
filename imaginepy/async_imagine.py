@@ -15,18 +15,19 @@ import pybase64
 
 
 class DeviantArt(Enum):
-    ID = 23185
-    SECRET = "fae0145a0736611056a5196a122c0d36"
+    ID = da_ID
+    SECRET = da_SECRET
 
 
 class AsyncImagine:
 
-    def __init__(self, restricted: bool = True):
+    def __init__(self, restricted: bool = True, api: str = og_ENDPOINT, proxies: dict = None):
         self.restricted = restricted
-        self.api = "https://inferenceengine.vyro.ai"
-        self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
+        self.api = api
+        self.proxy = proxies
+        self.cdn = og_CDN
         self.version = 1
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(proxies=self.proxy)
 
     async def close(self):
         await self.client.aclose()
@@ -58,7 +59,7 @@ class AsyncImagine:
             data = multi.read()
 
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(proxies=self.proxy) as client:
                 r = await client.request(
                     method=kwargs.get("method", "GET"),
                     url=kwargs.get("url"),
@@ -71,14 +72,14 @@ class AsyncImagine:
             raise Exception(f"Request failed: {e}")
 
         signature = hashlib.md5(r.content).hexdigest()
-        if signature == "d8b21a024d6267f3014d874d8372f7c8":
+        if signature == BANNED_SIGNATURE:
             raise BannedContent("Violation of community guidelines.")
         return r
 
     async def thumb(self, item: Union[Model, Style, Inspiration, Mode]) -> bytes:
         href = item.value[2 if isinstance(
             item, Model) or isinstance(item, Style) else 1]
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(proxies=self.proxy) as client:
             response = await client.get(f"{self.cdn}/{href}")
             response.raise_for_status()
             return bytes2png(response.content)
@@ -234,8 +235,8 @@ class AsyncImagine:
                     "negative_prompt": negative,
                     "seed": seed,
                     "cfg": get_cfg(cfg),
-                    "image": ("temp_646.912234613557.jpg", content, "image/jpg"),
-                    "mask": ("temp_646.912234613557.jpg", mask, "image/jpg"),
+                    "image": (sd_temp_name, content, "image/jpg"),
+                    "mask": (sd_temp_name, mask, "image/jpg"),
                     "priority": int(priority)
                 }
             )
@@ -273,7 +274,7 @@ class AsyncImagine:
                     "control": mode.value[0],
                     "style_id": style.value[0] if style else model.value[0],
                     "seed": seed,
-                    "image": ("temp_314.1353898439128.jpg", content, "image/jpg")
+                    "image": (remix_temp_name, content, "image/jpg")
                 }
             )
             if asbase64 == True:
