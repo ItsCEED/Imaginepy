@@ -33,12 +33,11 @@ class AsyncImagine:
 
     async def _request(self, **kwargs) -> Response:
         headers = {"accept": "*/*", "user-agent": "okhttp/4.10.0"}
-        headers.update(kwargs.get("headers") or {})
+        headers |= (kwargs.get("headers") or {})
 
         data = clear_dict(kwargs.get("data"))
         if data:
-            prompt = data.get("prompt", "").lower().split(" ")
-            if prompt:
+            if prompt := data.get("prompt", "").lower().split(" "):
                 for i, word in enumerate(prompt):
                     word = re.sub(r'[^a-zA-Z]', "", word)
                     if word in BANNED_WORDS:
@@ -76,8 +75,7 @@ class AsyncImagine:
         return r
 
     async def thumb(self, item: Union[Model, Style, Inspiration, Mode]) -> bytes:
-        href = item.value[2 if isinstance(
-            item, Model) or isinstance(item, Style) else 1]
+        href = item.value[2 if isinstance(item, (Model, Style)) else 1]
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{self.cdn}/{href}")
             response.raise_for_status()
@@ -113,7 +111,7 @@ class AsyncImagine:
                     "image": ("image.jpeg", content, "image/jpg")
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
@@ -152,7 +150,7 @@ class AsyncImagine:
                     "steps": get_steps(steps)
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
@@ -170,7 +168,7 @@ class AsyncImagine:
                     "image": ("_", content, "image/jpg")
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
@@ -239,7 +237,7 @@ class AsyncImagine:
                     "priority": int(priority)
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
@@ -276,7 +274,7 @@ class AsyncImagine:
                     "image": ("temp_314.1353898439128.jpg", content, "image/jpg")
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
@@ -294,7 +292,7 @@ class AsyncImagine:
                     "image": ("tempImage.jpg", content, "image/jpg")
                 }
             )
-            if asbase64 == True:
+            if asbase64:
                 return pybase64.b64encode(response.content).decode('utf-8')
             else:
                 return bytes2png(response.content)
